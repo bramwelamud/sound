@@ -3,277 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compact Audio Player Cards</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/2.0.5/wavesurfer.min.js"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+       *{
+           background-color: black;
+       }
+        .audio-player {
+            margin-bottom: 20px;
         }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            padding: 10px;
+        
+        .control_button {
+            margin-top: 5px;
         }
-
-        .audio-container {
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        .audio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .audio-card-simple {
-            background-color: #000000;
-            border: 1px solid #333;
-            border-radius: 6px;
-            padding: 15px;
-            position: relative;
-        }
-
-        .audio-waveform-container {
-            height: 60px;
-            background-color: #000000;
-            border-radius: 6px;
-            margin-bottom: 6px;
-        }
-
-        .audio-title {
-            font-size: 0.75rem;
-            text-align: center;
-            margin-top: 12px;
-            font-family: 'Courier New', monospace;
-            color: #ccc;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .audio-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .audio-play-btn {
-            width: 24px;
-            height: 24px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            background-image: url('https://cdn.shopify.com/s/files/1/0381/5188/0835/files/white_play_button.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .audio-play-btn.playing {
-            background-image: url('https://cdn.shopify.com/s/files/1/0381/5188/0835/files/pause-icon-18-256.png?v=1679989410');
-        }
-
-        .audio-empty-state {
-            text-align: center;
-            padding: 30px;
-            color: #9ca3af;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .audio-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 10px;
-            }
-            
-            .audio-card-simple {
-                padding: 12px;
-            }
-            
-            .audio-waveform-container {
-                height: 50px;
-            }
-            
-            .audio-title {
-                font-size: 0.7rem;
-            }
+        
+        .description {
+            text-align: left;
+            font-size: 12px !important;
+            font-family: 'Poppins', sans-serif !important;
+            color: #FFFFFF !important;
         }
     </style>
 </head>
 <body>
-    <div class="audio-container">
-        <!-- Audio Player Grid -->
-        <div class="audio-grid" id="audioGridSimple">
-            <!-- Audio cards will be populated here -->
-        </div>
-
-        <!-- Empty State -->
-        <div class="audio-empty-state" id="emptyStateSimple" style="display: none;">
-            <p>No audio tracks available.</p>
-        </div>
-    </div>
+    <div id="audio-players-container"></div>
 
     <script>
-        // Audio tracks data array
-        const audioTracksDataSimple = [
-            {
-                id: 5,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 6,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 7,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 8,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 9,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 10,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 1,
-                title: "Lost N Found",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 2,
-                title: "Midnight Vibes",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 3,
-                title: "Urban Nights",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            },
-            {
-                id: 4,
-                title: "Street Dreams",
-                audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
-            }
-        ];
+        document.addEventListener('DOMContentLoaded', function () {
+            const audioTracks = [
+                {
+                    title: "Lost N Found",
+                    audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Crescent_SEXY_DRILL_-_Lost_n_FOund_160_BPM.mp3?v=1733228716"
+                },
+                {
+                    title: "Your Second Track",
+                    audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Synth_Chords_-_C_Min.mp3?v=1728586558"
+                },
+                {
+                    title: "Electric Piano G# Min",
+                    audioUrl: "https://cdn.shopify.com/s/files/1/0654/8930/5819/files/Electric_Piano_-_G_Min.mp3?v=1728586559"
+                },
+                
+                
+            ];
 
-        let audioTracksSimple = [...audioTracksDataSimple];
-        let wavesurfers = {};
-        let currentPlayingId = null;
-
-        function createAudioCardSimple(track) {
-            const card = document.createElement('div');
-            card.className = 'audio-card-simple';
-            card.innerHTML = `
-                <div class="audio-waveform-container" id="wavesurfer-container-${track.id}"></div>
-                <div class="audio-controls">
-                    <button class="audio-play-btn" id="audio-playBtn-${track.id}"></button>
-                </div>
-                <div class="audio-title">${track.title}</div>
-            `;
-            return card;
-        }
-
-        function renderAudioCardsSimple() {
-            const grid = document.getElementById('audioGridSimple');
-            const emptyState = document.getElementById('emptyStateSimple');
+            const container = document.getElementById('audio-players-container');
             
-            grid.innerHTML = '';
-            
-            if (audioTracksSimple.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            } else {
-                emptyState.style.display = 'none';
-            }
+           
+            audioTracks.forEach(function(track, index) {
+                const playerId = `player-${index}`;
+                const containerId = `wavesurfer-container-${index}`;
+                const buttonId = `playPause-${index}`;
+                
+               
+                const playerHTML = `
+                    <div class="audio-player">
+                        <div id="${containerId}"></div>
+                        <img height="20px" width="20px" id="${buttonId}" 
+                             src="https://cdn.shopify.com/s/files/1/0381/5188/0835/files/white_play_button.png" 
+                             class="control_button" alt="Play/Pause Button">
+                        <p class="description">${track.title}</p>
+                    </div>
+                `;
+                
+                container.innerHTML += playerHTML;
+                
+                setTimeout(() => {
+                    const playPauseBtn = document.querySelector(`#${buttonId}`);
+                    
+                    const wavesurfer = WaveSurfer.create({
+                        container: `#${containerId}`,
+                        waveColor: '#FFFFFF',
+                        progressColor: '#C4AD38',
+                        height: '40',
+                        cursorWidth: '0',
+                        hideScrollbar: 'true',
+                        backend: 'MediaElement'
+                    });
 
-            audioTracksSimple.forEach(track => {
-                const card = createAudioCardSimple(track);
-                grid.appendChild(card);
-                setupWavesurfer(track.id, track.audioUrl);
-                setupAudioEventsSimple(track.id);
+                    wavesurfer.load(track.audioUrl);
+
+                    playPauseBtn.addEventListener("click", function (e) {
+                        if (wavesurfer.isPlaying()) {
+                            wavesurfer.pause();
+                            playPauseBtn.src = 'https://cdn.shopify.com/s/files/1/0381/5188/0835/files/white_play_button.png';
+                        } else {
+                            wavesurfer.play();
+                            playPauseBtn.src = 'https://cdn.shopify.com/s/files/1/0381/5188/0835/files/pause-icon-18-256.png?v=1679989410';
+                        }
+                    });
+                }, 10);
             });
-        }
-
-        function setupWavesurfer(trackId, audioUrl) {
-            wavesurfers[trackId] = WaveSurfer.create({
-                container: `#wavesurfer-container-${trackId}`,
-                waveColor: '#FFFFFF',
-                progressColor: '#C4AD38',
-                height: 50,
-                cursorWidth: 0,
-                barWidth: 1,
-                barGap: 1,
-                barRadius: 1,
-                hideScrollbar: true,
-                backend: 'MediaElement'
-            });
-            
-            wavesurfers[trackId].load(audioUrl);
-            
-            wavesurfers[trackId].on('ready', function() {
-                console.log(`Wavesurfer ${trackId} is ready`);
-            });
-            
-            wavesurfers[trackId].on('finish', function() {
-                const playBtn = document.getElementById(`audio-playBtn-${trackId}`);
-                playBtn.classList.remove('playing');
-                if (currentPlayingId === trackId) {
-                    currentPlayingId = null;
-                }
-            });
-        }
-
-        function setupAudioEventsSimple(trackId) {
-            const playBtn = document.getElementById(`audio-playBtn-${trackId}`);
-
-            playBtn.addEventListener('click', () => togglePlaySimple(trackId));
-        }
-
-        function togglePlaySimple(trackId) {
-            const playBtn = document.getElementById(`audio-playBtn-${trackId}`);
-            
-            // Pause any currently playing audio
-            if (currentPlayingId && currentPlayingId !== trackId) {
-                wavesurfers[currentPlayingId].pause();
-                const currentBtn = document.getElementById(`audio-playBtn-${currentPlayingId}`);
-                currentBtn.classList.remove('playing');
-            }
-
-            if (wavesurfers[trackId].isPlaying()) {
-                wavesurfers[trackId].pause();
-                playBtn.classList.remove('playing');
-                currentPlayingId = null;
-            } else {
-                wavesurfers[trackId].play();
-                playBtn.classList.add('playing');
-                currentPlayingId = trackId;
-            }
-        }
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAudioCardsSimple();
         });
     </script>
 </body>
